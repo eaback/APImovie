@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const MovieList = () => {
+  const [movies, setMovies] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -20,7 +22,7 @@ const MovieList = () => {
           },
         });
 
-        console.log(response.data);
+        setMovies(response.data.results);
       } catch (error) {
         console.error(error);
       }
@@ -31,7 +33,24 @@ const MovieList = () => {
 
   return (
     <div>
-      {/* Your component rendering logic goes here */}
+      <h1>Movie List</h1>
+      <ul>
+        {movies && movies.length > 0 ? (
+          movies.map((movie) => (
+            <li key={movie.id}>
+              <h2>{movie.title}</h2>
+              <p>Release Date: {movie.release_date}</p>
+              <img
+                src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+                alt={movie.title}
+                style={{ maxWidth: '200px' }}
+              />
+            </li>
+          ))
+        ) : (
+          <p>No movies found.</p>
+        )}
+      </ul>
     </div>
   );
 };
